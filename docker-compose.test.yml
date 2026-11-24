@@ -1,0 +1,14 @@
+# Test-stack override. NOT for production or normal local use.
+#
+#   docker compose -f docker-compose.yml -f docker-compose.test.yml up -d --build
+#
+# The rate limits (review M2) are counted per client IP. All requests from the host reach the container through
+# Docker's port proxy and share one address, so the test suite would exhaust the limits within one run. Here the app
+# trusts X-Forwarded-For from private (uniquelocal) addresses such as the Docker gateway, and every test sends its own
+# X-Forwarded-For address (tests/support/test.ts), so each test gets separate rate-limit buckets.
+#
+# The default docker-compose.yml does not set TRUST_PROXY: X-Forwarded-For is ignored there.
+services:
+  app:
+    environment:
+      TRUST_PROXY: uniquelocal

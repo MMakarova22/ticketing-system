@@ -1,0 +1,14 @@
+{
+  // Shared strictness settings for every TypeScript project in the repo.
+  "compilerOptions": {
+    "target": "es2023",
+    "strict": true,
+    "noUncheckedIndexedAccess": true,
+    "exactOptionalPropertyTypes": true,
+    "noImplicitReturns": true,
+    "noFallthroughCasesInSwitch": true,
+    "noImplicitOverride": true,
+    "forceConsistentCasingInFileNames": true,
+    "skipLibCheck": true
+  }
+}

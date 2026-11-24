@@ -1,0 +1,73 @@
+# Full local stack: PostgreSQL + Mailpit (local SMTP) + app (NestJS API serving the React SPA).
+#
+#   docker compose up --build      -> http://localhost:3000 (app), http://localhost:8025 (Mailpit inbox)
+#
+# Every ${VAR:-default} below is a LOCAL DEVELOPMENT DEFAULT, not a secret, so a clean checkout starts
+# without a .env file. Override any value in a git-ignored .env file (see .env.example).
+# Never put real credentials in this file.
+
+services:
+  db:
+    image: postgres:17-alpine
+    container_name: ticketing-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB:-ticketing_db}
+      POSTGRES_USER: ${POSTGRES_USER:-ticketing_user}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-ticketing_local_dev_password}
+    ports:
+      # Loopback only: reachable from the host for `prisma migrate dev`, not from the network.
+      - "127.0.0.1:${POSTGRES_PORT:-5432}:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      # $$ = use the container's own environment, so this works with or without a .env file.
+      test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  mailpit:
+    image: axllent/mailpit:v1.33.1
+    container_name: ticketing-mailpit
+    restart: unless-stopped
+    environment:
+      MP_MAX_MESSAGES: 5000
+      # Accept any SMTP credentials so the app works whether or not SMTP_USER/SMTP_PASS are set.
+      MP_SMTP_AUTH_ACCEPT_ANY: 1
+      MP_SMTP_AUTH_ALLOW_INSECURE: 1
+    ports:
+      - "127.0.0.1:${MAILPIT_UI_PORT:-8025}:8025"
+      - "127.0.0.1:${MAILPIT_SMTP_PORT:-1025}:1025"
+
+  app:
+    build:
+      context: .
+    image: ticketing-app:local
+    container_name: ticketing-app
+    restart: unless-stopped
+    depends_on:
+      db:
+        condition: service_healthy
+      mailpit:
+        condition: service_started
+    environment:
+      NODE_ENV: production
+      PORT: "3000"
+      # Built from the POSTGRES_* values; host is the `db` service on the compose network.
+      DATABASE_URL: postgresql://${POSTGRES_USER:-ticketing_user}:${POSTGRES_PASSWORD:-ticketing_local_dev_password}@db:5432/${POSTGRES_DB:-ticketing_db}?schema=public
+      APP_BASE_URL: ${APP_BASE_URL:-http://localhost:${APP_PORT:-3000}}
+      SESSION_TTL_DAYS: ${SESSION_TTL_DAYS:-7}
+      COOKIE_SECURE: ${COOKIE_SECURE:-true}
+      # Defaults to Mailpit. Set these in .env to use a real SMTP relay (for example a corporate relay).
+      SMTP_HOST: ${SMTP_HOST:-mailpit}
+      SMTP_PORT: ${SMTP_PORT:-1025}
+      SMTP_SECURE: ${SMTP_SECURE:-false}
+      SMTP_USER: ${SMTP_USER:-}
+      SMTP_PASS: ${SMTP_PASS:-}
+      SMTP_FROM: ${SMTP_FROM:-Ticket Tracker <no-reply@ticketing.local>}
+    ports:
+      - "${APP_PORT:-3000}:3000"
+
+volumes:
+  postgres_data:

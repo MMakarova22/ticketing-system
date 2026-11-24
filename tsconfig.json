@@ -1,0 +1,19 @@
+{
+  // Root project: type-checks repo-level TypeScript (Playwright config/tests, Prisma config).
+  // The apps have their own tsconfig files under apps/api and apps/web.
+  "extends": "./tsconfig.base.json",
+  "compilerOptions": {
+    "module": "nodenext",
+    "moduleResolution": "nodenext",
+    "types": ["node"],
+    "noEmit": true,
+    "verbatimModuleSyntax": true,
+    "isolatedModules": true,
+    "moduleDetection": "force",
+    // Shared test helpers are imported as "../support/x.ts" (Playwright loads .ts directly).
+    "allowImportingTsExtensions": true
+  },
+  "include": ["playwright.config.ts", "prisma.config.ts", "tests/**/*.ts"],
+  // Unit tests import CommonJS API sources and have their own tsconfig (tests/unit/tsconfig.json).
+  "exclude": ["tests/unit"]
+}

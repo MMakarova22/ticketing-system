@@ -1,0 +1,7 @@
+# Normalize line endings so files used inside Linux containers work on Windows checkouts.
+* text=auto eol=lf
+
+*.png  binary
+*.jpg  binary
+*.ico  binary
+*.docx binary

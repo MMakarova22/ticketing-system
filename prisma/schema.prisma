@@ -1,0 +1,128 @@
+
+generator client {
+  provider = "prisma-client"
+  output       = "../apps/api/src/generated/prisma"
+  moduleFormat = "cjs"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+enum TicketType {
+  bug
+  feature
+  fix
+}
+
+enum TicketState {
+  new
+  ready_for_implementation
+  in_progress
+  ready_for_acceptance
+  done
+}
+
+model User {
+  id              String   @id @default(uuid()) @db.Uuid
+  email           String   @unique
+  passwordHash    String?  // NULL until the email is verified; the password is set by the verification step (review M1)
+  emailVerifiedAt DateTime?
+  createdAt       DateTime @default(now())
+
+  sessions        Session[]
+  verificationTokens EmailVerificationToken[]
+  createdTickets Ticket[]  @relation("TicketCreator")
+  comments        Comment[]
+}
+
+model Session {
+  id        String   @id @default(uuid()) @db.Uuid
+  tokenHash String   @unique
+  userId    String   @db.Uuid
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+  ipAddress String?
+  userAgent String?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([expiresAt])
+}
+
+model EmailVerificationToken {
+  id        String   @id @default(uuid()) @db.Uuid
+  tokenHash String   @unique
+  userId    String   @db.Uuid
+  expiresAt DateTime
+  usedAt    DateTime?
+  createdAt DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([expiresAt])
+}
+
+model Team {
+  id             String   @id @default(uuid()) @db.Uuid
+  name           String
+  nameNormalized String   @unique
+  createdAt      DateTime @default(now())
+  modifiedAt     DateTime @updatedAt
+
+  epics   Epic[]
+  tickets Ticket[]
+}
+
+model Epic {
+  id          String   @id @default(uuid()) @db.Uuid
+  teamId      String   @db.Uuid
+  title       String
+  description String?
+  createdAt   DateTime @default(now())
+  modifiedAt  DateTime @updatedAt
+
+  team    Team     @relation(fields: [teamId], references: [id], onDelete: Restrict)
+  tickets Ticket[]
+
+  @@unique([id, teamId])
+  @@index([teamId])
+}
+
+model Ticket {
+  id          String      @id @default(uuid()) @db.Uuid
+  teamId      String      @db.Uuid
+  epicId      String?     @db.Uuid
+  type        TicketType
+  state       TicketState @default(new)
+  title       String
+  body        String      @db.Text
+  createdAt   DateTime    @default(now())
+  modifiedAt  DateTime    @updatedAt
+  createdById String      @db.Uuid
+
+  team      Team    @relation(fields: [teamId], references: [id], onDelete: Restrict)
+  epic      Epic?   @relation(fields: [epicId, teamId], references: [id, teamId], onDelete: Restrict)
+  createdBy User    @relation("TicketCreator", fields: [createdById], references: [id], onDelete: Restrict)
+  comments  Comment[]
+
+  @@index([teamId, state, modifiedAt])
+  @@index([epicId])
+  @@index([createdById])
+}
+
+model Comment {
+  id        String   @id @default(uuid()) @db.Uuid
+  ticketId  String   @db.Uuid
+  authorId  String   @db.Uuid
+  body      String   @db.Text
+  createdAt DateTime @default(now())
+
+  ticket Ticket @relation(fields: [ticketId], references: [id], onDelete: Cascade)
+  author User   @relation(fields: [authorId], references: [id], onDelete: Restrict)
+
+  @@index([ticketId, createdAt])
+  @@index([authorId])
+}

@@ -1,0 +1,221 @@
+/* Page-specific styles: team selector, Teams and Epics, ticket details and comments. */
+
+.team-select {
+  margin-top: 0.5rem;
+  min-width: 16rem;
+}
+
+/* --- Teams and Epics ------------------------------------------------------------------ */
+/* The h1 is visually hidden; the header row is the intro text + Create team (Teams), or the team selector + Create
+   epic (Epics). Tables keep their columns and scroll sideways inside their panel on narrow screens. */
+
+.page-teams .page-header,
+.page-epics .page-header {
+  align-items: center;
+}
+
+.page-teams .page-header p {
+  font-size: var(--font-size-control);
+}
+
+.page-epics .page-header {
+  justify-content: flex-start;
+}
+
+/* Compact titles of the create/edit panels (Create team, Create epic, Edit epic). */
+.form-title {
+  margin: 0;
+  font-size: 1rem;
+  font-weight: 600;
+}
+
+.page-epics .team-select {
+  flex: 0 1 16rem;
+  min-width: 10rem;
+  margin: 0;
+}
+
+/* The note about disabled Delete buttons sits above the table. */
+.panel > .table-note:first-child {
+  margin: 0 0 0.75rem;
+}
+
+/* Below this width the table scrolls inside .table-scroll instead of squeezing its columns. */
+.table-teams,
+.table-epics {
+  min-width: 34rem;
+}
+
+.table-teams .name,
+.table-epics .name {
+  overflow-wrap: anywhere;
+}
+
+.table-teams .modified,
+.table-epics .modified {
+  white-space: nowrap;
+}
+
+/* Renaming: room for the name field and its message. */
+.table-teams tr.editing .name {
+  min-width: 14rem;
+}
+
+.table-teams tr.editing .field-error {
+  margin-top: 0.375rem;
+}
+
+.epic-form-header {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.epic-form-header p {
+  margin: 0;
+  font-size: var(--font-size-sm);
+}
+
+@media (max-width: 640px) {
+  .page-epics .team-select {
+    flex: 1 1 10rem;
+  }
+
+  /* While a table scrolls sideways, its Actions column stays pinned at the right edge, so Edit/Delete (and Save/Cancel
+     while renaming) are always reachable. */
+  .table-teams .actions,
+  .table-epics .actions {
+    position: sticky;
+    right: 0;
+    background: var(--color-surface);
+    box-shadow: -1px 0 0 var(--color-border);
+  }
+
+  .table-teams tbody tr:hover .actions,
+  .table-epics tbody tr:hover .actions {
+    background: var(--color-surface-hover);
+  }
+
+  /* The name column fits left of the pinned actions (also the rename field); the other columns scroll in. */
+  .table-teams .name,
+  .table-epics .name {
+    width: 11rem;
+    min-width: 11rem;
+    max-width: 11rem;
+  }
+
+  .table-teams tr.editing .name {
+    min-width: 11rem;
+  }
+}
+
+/* --- Ticket details and New ticket ------------------------------------------------------- */
+
+/* "Back to board": a quiet text link with a chevron. */
+.back-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  font-size: var(--font-size-control);
+  color: var(--color-text-muted);
+  text-decoration: none;
+}
+
+.back-link:hover {
+  color: var(--color-text);
+  text-decoration: underline;
+}
+
+/* The ticket title: a compact, visible h1 that wraps (the generic page title is 1.125rem). */
+.page-ticket > .page-header {
+  align-items: flex-start;
+  flex-wrap: nowrap;
+}
+
+.page-ticket > .page-header h1 {
+  font-size: 1.25rem;
+  overflow-wrap: anywhere;
+}
+
+.ticket-details {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.details {
+  display: grid;
+  grid-template-columns: max-content 1fr;
+  align-items: center;
+  gap: 0.5rem 1.25rem;
+  margin: 0;
+  font-size: var(--font-size-control);
+}
+
+.details dt {
+  font-size: var(--font-size-sm);
+  font-weight: 500;
+  color: var(--color-text-muted);
+}
+
+.details dd {
+  margin: 0;
+  overflow-wrap: anywhere;
+}
+
+.ticket-body,
+.comment-body {
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+.ticket-body {
+  padding-top: 1rem;
+  font-size: var(--font-size-control);
+  line-height: 1.55;
+  border-top: 1px solid var(--color-border);
+}
+
+/* --- Comments ------------------------------------------------------------------------ */
+
+.comments {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.comment-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.comment {
+  padding: 0.5rem 0.75rem;
+  font-size: var(--font-size-control);
+  background: var(--color-surface-2);
+  border-radius: var(--radius);
+}
+
+.comment-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.25rem 0.5rem;
+  margin-bottom: 0.25rem;
+  font-size: var(--font-size-sm);
+  color: var(--color-text-muted);
+}
+
+.comment-meta strong {
+  font-weight: 500;
+  overflow-wrap: anywhere;
+}
+
+@media (max-width: 640px) {
+  .page-ticket > .page-header {
+    flex-wrap: wrap;
+  }
+}

@@ -1,0 +1,18 @@
+{
+  // NestJS backend, compiled to CommonJS with plain `tsc` (TypeScript 7).
+  // emitDecoratorMetadata is required for Nest dependency injection.
+  // rewriteRelativeImportExtensions is required because the Prisma 7 client imports "./x.ts" paths.
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    "module": "nodenext",
+    "moduleResolution": "nodenext",
+    "rootDir": "src",
+    "outDir": "dist",
+    "types": ["node"],
+    "sourceMap": true,
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true,
+    "rewriteRelativeImportExtensions": true
+  },
+  "include": ["src"]
+}

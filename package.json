@@ -1,0 +1,51 @@
+{
+  "name": "ticketing-system",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Hackathon Kanban-style ticketing system: React SPA + NestJS API + PostgreSQL",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/MMakarova22/ticketing-system-portfolio.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "module",
+  "bugs": {
+    "url": "https://github.com/MMakarova22/ticketing-system-portfolio/issues"
+  },
+  "homepage": "https://github.com/MMakarova22/ticketing-system-portfolio#readme",
+  "workspaces": [
+    "apps/api",
+    "apps/web"
+  ],
+  "scripts": {
+    "postinstall": "prisma skills sync || exit 0",
+    "prisma:generate": "prisma generate",
+    "db:migrate": "prisma migrate dev",
+    "db:deploy": "prisma migrate deploy",
+    "build": "npm run prisma:generate && npm run build -w apps/web && npm run build -w apps/api",
+    "typecheck": "npm run prisma:generate && npm run typecheck -w apps/api && npm run typecheck -w apps/web && tsc -p tsconfig.json && tsc -p tests/unit/tsconfig.json",
+    "dev:api:build": "npm run build:watch -w apps/api",
+    "dev:api": "npm run start:dev -w apps/api",
+    "dev:web": "npm run dev -w apps/web",
+    "start": "npm run start -w apps/api",
+    "test": "playwright test",
+    "test:unit": "playwright test --project=unit",
+    "test:api": "playwright test --project=api",
+    "test:e2e": "playwright test --project=e2e"
+  },
+  "allowScripts": {
+    "prisma@7.10.1": true,
+    "@prisma/engines@7.10.1": true
+  },
+  "dependencies": {
+    "dotenv": "18.0.10",
+    "prisma": "7.10.1"
+  },
+  "devDependencies": {
+    "@playwright/test": "1.65.1",
+    "@types/node": "26.6.6",
+    "typescript": "7.0.2"
+  }
+}

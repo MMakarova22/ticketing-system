@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="1.5 1.5 21 21">
+  <!-- Ticket Tracker favicon: a ticket stub holding a tiny three-column board. Same geometry as BrandMark
+       (apps/web/src/components/icons.tsx); the colors are the accent and on-accent tokens of each theme
+       (apps/web/src/styles/tokens.css) and follow the browser's color scheme.
+       favicon.ico is generated from this file: node scripts/generate-favicon.mjs -->
+  <style>
+    .ticket { fill: #635bdb; }
+    .bar { fill: #ffffff; }
+    @media (prefers-color-scheme: dark) {
+      .ticket { fill: #9189ff; }
+      .bar { fill: #17191f; }
+    }
+  </style>
+  <path class="ticket" d="M5 4H19A3 3 0 0 1 22 7V9.5A2.5 2.5 0 0 0 22 14.5V17A3 3 0 0 1 19 20H5A3 3 0 0 1 2 17V14.5A2.5 2.5 0 0 0 2 9.5V7A3 3 0 0 1 5 4Z"/>
+  <rect class="bar" x="7" y="8" width="2.5" height="8" rx="1"/>
+  <rect class="bar" x="10.75" y="8" width="2.5" height="5.5" rx="1"/>
+  <rect class="bar" x="14.5" y="8" width="2.5" height="3" rx="1"/>
+</svg>

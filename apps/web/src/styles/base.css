@@ -1,0 +1,47 @@
+/* Document defaults and global utilities. */
+
+:root {
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  color: var(--color-text);
+  background: var(--color-bg);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+}
+
+/* Text links: accent color, underlined (color alone must not identify a link), keyboard focus ring. :where() keeps
+   these at zero specificity, so every link with its own class (.button, .topnav-link, card titles…) keeps its own
+   colors, including on hover. The accent passes 4.5:1 on the page and surface backgrounds in both themes. */
+:where(a) {
+  color: var(--color-accent);
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.15em;
+}
+
+:where(a:hover) {
+  color: var(--color-accent-hover);
+}
+
+:where(a:focus-visible) {
+  outline: 2px solid var(--color-focus);
+  outline-offset: 2px;
+  border-radius: 2px;
+}
+
+.muted {
+  color: var(--color-text-muted);
+}
+
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}

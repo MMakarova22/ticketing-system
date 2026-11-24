@@ -1,0 +1,13 @@
+{
+  // Unit tests import API sources directly. The API package is CommonJS, which the root project's
+  // verbatimModuleSyntax rejects, so these tests are type-checked separately (same strict base settings).
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    "module": "nodenext",
+    "moduleResolution": "nodenext",
+    "types": ["node"],
+    "noEmit": true,
+    "allowImportingTsExtensions": true
+  },
+  "include": ["./**/*.ts"]
+}
